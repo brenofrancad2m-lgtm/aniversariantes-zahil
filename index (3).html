@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Aniversariantes - Janeiro 2026 | Zahil</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vinho: #721817;
+            --vinho-escuro: #4a0e0d;
+            --preto: #0a0a0a;
+            --cinza-escuro: #1a1a1a;
+            --cinza: #2a2a2a;
+            --branco: #ffffff;
+            --dourado: #c9a961;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--preto);
+            color: var(--branco);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--vinho-escuro) 0%, var(--vinho) 100%);
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(114, 24, 23, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            height: 50px;
+            filter: brightness(0) invert(1);
+        }
+
+        .header-title {
+            color: var(--dourado);
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .nav-tabs {
+            background-color: var(--cinza-escuro);
+            padding: 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            border-bottom: 3px solid var(--vinho);
+        }
+
+        .nav-tab {
+            padding: 1.2rem 2rem;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--branco);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background-color: var(--cinza);
+            color: var(--dourado);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(to bottom, var(--vinho), var(--vinho-escuro));
+            border-bottom-color: var(--dourado);
+        }
+
+        .content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--cinza-escuro) 0%, var(--cinza) 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(114, 24, 23, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(114, 24, 23, 0.6);
+            border-color: var(--vinho);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+            fill: var(--vinho);
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            color: var(--dourado);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--branco);
+            margin-bottom: 0.3rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .section-title {
+            color: var(--dourado);
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--vinho);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            fill: var(--vinho);
+        }
+
+        .table-container {
+            background-color: var(--cinza-escuro);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--vinho-escuro) 0%, var(--vinho) 100%);
+        }
+
+        th {
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dourado);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--cinza);
+            color: var(--branco);
+        }
+
+        tr:hover {
+            background-color: rgba(114, 24, 23, 0.1);
+        }
+
+        .chart-container {
+            background-color: var(--cinza-escuro);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        footer {
+            background-color: var(--cinza-escuro);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+            border-top: 3px solid var(--vinho);
+        }
+
+        footer p {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .developer-credit {
+            color: var(--dourado);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-title {
+                font-size: 1.2rem;
+            }
+
+            .logo {
+                height: 35px;
+            }
+
+            .logo-container {
+                justify-content: center;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="https://zahil.com.br/wp-content/uploads/2023/04/Grupo-2.png" alt="Zahil Vinhos" class="logo">
+            <h1 class="header-title">Campanha Aniversariantes Janeiro/2026</h1>
+        </div>
+    </header>
+
+    <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="switchTab('maira')">Maira Oliveira</button>
+        <button class="nav-tab" onclick="switchTab('joice')">Joice Costa</button>
+        <button class="nav-tab" onclick="switchTab('izalto')">Izalto Ribeiro</button>
+        <button class="nav-tab" onclick="switchTab('andrea')">Andrea Di Russo</button>
+        <button class="nav-tab" onclick="switchTab('gabriel')">Gabriel Varela</button>
+        <button class="nav-tab" onclick="switchTab('livia')">Lívia Correa</button>
+        <button class="nav-tab" onclick="switchTab('regiane')">Regiane Paula</button>
+    </nav>
+
+    <main class="content">
+        <!-- MAIRA OLIVEIRA -->
+        <div id="maira" class="tab-content active">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Maira Oliveira - Performance Geral
+            </h2>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <div class="card-title">Total Campanha</div>
+                    <div class="card-value">80</div>
+                    <div class="card-subtitle">Contatos disponibilizados</div>
+                </div>
+
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 11.75C6.66 11.75 2 12.92 2 15.25V17H16V15.25C16 12.92 11.34 11.75 9 11.75Z"/>
+                    </svg>
+                    <div class="card-title">Vendido</div>
+                    <div class="card-value" style="color: #22c55e;">9</div>
+                    <div class="card-subtitle">Conversões realizadas</div>
+                </div>
+
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"/>
+                    </svg>
+                    <div class="card-title">Perdido</div>
+                    <div class="card-value" style="color: #ef4444;">137</div>
+                    <div class="card-subtitle">Oportunidades perdidas</div>
+                </div>
+
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 6V9L16 5L12 1V4C7.58 4 4 7.58 4 12C4 13.57 4.46 15.03 5.24 16.26L6.7 14.8C6.25 13.97 6 13 6 12C6 8.69 8.69 6 12 6Z"/>
+                    </svg>
+                    <div class="card-title">Em Negociação</div>
+                    <div class="card-value" style="color: #eab308;">12</div>
+                    <div class="card-subtitle">Total em pipeline</div>
+                </div>
+
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4Z"/>
+                    </svg>
+                    <div class="card-title">E-mails Válidos</div>
+                    <div class="card-value">58</div>
+                    <div class="card-subtitle">18 fake detectados</div>
+                </div>
+
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <div class="card-title">TM de Pedido</div>
+                    <div class="card-value">R$ 1.058</div>
+                    <div class="card-subtitle">Ticket médio</div>
+                </div>
+
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    </svg>
+                    <div class="card-title">TM de Garrafa</div>
+                    <div class="card-value">R$ 182</div>
+                    <div class="card-subtitle">Valor por unidade</div>
+                </div>
+
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11Z"/>
+                    </svg>
+                    <div class="card-title">Média Frequência</div>
+                    <div class="card-value">3.68</div>
+                    <div class="card-subtitle">Garrafas por pedido</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z"/>
+                </svg>
+                Evolução Semanal
+            </h3>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Semana</th>
+                            <th>Aguardando</th>
+                            <th>Tentando</th>
+                            <th>Interesse</th>
+                            <th>Vendido</th>
+                            <th>Perdido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>S1</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td><strong>S2</strong></td><td>62</td><td>11</td><td>2</td><td>1</td><td>4</td></tr>
+                        <tr><td><strong>S3</strong></td><td>3</td><td>45</td><td>5</td><td>1</td><td>26</td></tr>
+                        <tr><td><strong>S4</strong></td><td>2</td><td>40</td><td>5</td><td>2</td><td>32</td></tr>
+                        <tr style="background-color: rgba(114, 24, 23, 0.2);">
+                            <td><strong>S5</strong></td><td>0</td><td>1</td><td>0</td><td><strong style="color: #22c55e;">5</strong></td><td><strong style="color: #ef4444;">75</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="section-title">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z"/>
+                    </svg>
+                    Métricas Adicionais
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                    <div>
+                        <div style="color: var(--dourado); margin-bottom: 0.5rem; font-size: 0.9rem;">Disponibilizado na semana</div>
+                        <div style="font-size: 2rem; font-weight: bold;">2</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--dourado); margin-bottom: 0.5rem; font-size: 0.9rem;">Negociações automáticas</div>
+                        <div style="font-size: 2rem; font-weight: bold;">76</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--dourado); margin-bottom: 0.5rem; font-size: 0.9rem;">Negociações manuais</div>
+                        <div style="font-size: 2rem; font-weight: bold;">4</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--dourado); margin-bottom: 0.5rem; font-size: 0.9rem;">Não concluídas</div>
+                        <div style="font-size: 2rem; font-weight: bold; color: #ef4444;">1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JOICE COSTA -->
+        <div id="joice" class="tab-content">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Joice Costa - Performance Geral
+            </h2>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <div class="card-title">Total Campanha</div>
+                    <div class="card-value">93</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 11.75C6.66 11.75 2 12.92 2 15.25V17H16V15.25C16 12.92 11.34 11.75 9 11.75Z"/>
+                    </svg>
+                    <div class="card-title">Vendido</div>
+                    <div class="card-value" style="color: #22c55e;">2</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"/>
+                    </svg>
+                    <div class="card-title">Perdido</div>
+                    <div class="card-value" style="color: #ef4444;">1</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 6V9L16 5L12 1V4C7.58 4 4 7.58 4 12C4 13.57 4.46 15.03 5.24 16.26L6.7 14.8C6.25 13.97 6 13 6 12C6 8.69 8.69 6 12 6Z"/>
+                    </svg>
+                    <div class="card-title">Em Negociação</div>
+                    <div class="card-value" style="color: #eab308;">91</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4Z"/>
+                    </svg>
+                    <div class="card-title">E-mails Válidos</div>
+                    <div class="card-value">81</div>
+                    <div class="card-subtitle">12 fake detectados</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <div class="card-title">TM de Pedido</div>
+                    <div class="card-value">R$ 859</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    </svg>
+                    <div class="card-title">TM de Garrafa</div>
+                    <div class="card-value">R$ 183</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11Z"/>
+                    </svg>
+                    <div class="card-title">Média Frequência</div>
+                    <div class="card-value">3.15</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z"/>
+                </svg>
+                Evolução Semanal
+            </h3>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Semana</th>
+                            <th>Aguardando</th>
+                            <th>Tentando</th>
+                            <th>Interesse</th>
+                            <th>Vendido</th>
+                            <th>Perdido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>S1</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td><strong>S2</strong></td><td>72</td><td>21</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td><strong>S3</strong></td><td>66</td><td>28</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td><strong>S4</strong></td><td>48</td><td>43</td><td>0</td><td>2</td><td>1</td></tr>
+                        <tr style="background-color: rgba(114, 24, 23, 0.2);">
+                            <td><strong>S5</strong></td><td>48</td><td>43</td><td>0</td><td><strong style="color: #22c55e;">2</strong></td><td><strong style="color: #ef4444;">1</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- IZALTO RIBEIRO -->
+        <div id="izalto" class="tab-content">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Izalto Ribeiro - Performance Geral
+            </h2>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <div class="card-title">Total Campanha</div>
+                    <div class="card-value">12</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 11.75C6.66 11.75 2 12.92 2 15.25V17H16V15.25C16 12.92 11.34 11.75 9 11.75Z"/>
+                    </svg>
+                    <div class="card-title">Vendido</div>
+                    <div class="card-value" style="color: #22c55e;">4</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"/>
+                    </svg>
+                    <div class="card-title">Perdido</div>
+                    <div class="card-value" style="color: #ef4444;">9</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <div class="card-title">TM de Pedido</div>
+                    <div class="card-value">R$ 2.546</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    </svg>
+                    <div class="card-title">TM de Garrafa</div>
+                    <div class="card-value">R$ 368</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11Z"/>
+                    </svg>
+                    <div class="card-title">Média Frequência</div>
+                    <div class="card-value">6.66</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANDREA DI RUSSO -->
+        <div id="andrea" class="tab-content">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Andrea Di Russo - Performance Geral
+            </h2>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <div class="card-title">Total Campanha</div>
+                    <div class="card-value">42</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 11.75C6.66 11.75 2 12.92 2 15.25V17H16V15.25C16 12.92 11.34 11.75 9 11.75Z"/>
+                    </svg>
+                    <div class="card-title">Vendido</div>
+                    <div class="card-value" style="color: #22c55e;">0</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"/>
+                    </svg>
+                    <div class="card-title">Perdido</div>
+                    <div class="card-value" style="color: #ef4444;">1</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 6V9L16 5L12 1V4C7.58 4 4 7.58 4 12C4 13.57 4.46 15.03 5.24 16.26L6.7 14.8C6.25 13.97 6 13 6 12C6 8.69 8.69 6 12 6Z"/>
+                    </svg>
+                    <div class="card-title">Em Negociação</div>
+                    <div class="card-value" style="color: #eab308;">38</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <div class="card-title">TM de Pedido</div>
+                    <div class="card-value">R$ 1.029</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11Z"/>
+                    </svg>
+                    <div class="card-title">Média Frequência</div>
+                    <div class="card-value">6.87</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GABRIEL VARELA -->
+        <div id="gabriel" class="tab-content">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Gabriel Varela - Performance Geral
+            </h2>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <div class="card-title">Total Campanha</div>
+                    <div class="card-value">80</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 11.75C6.66 11.75 2 12.92 2 15.25V17H16V15.25C16 12.92 11.34 11.75 9 11.75Z"/>
+                    </svg>
+                    <div class="card-title">Vendido</div>
+                    <div class="card-value" style="color: #22c55e;">0</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <div class="card-title">TM de Pedido</div>
+                    <div class="card-value">R$ 524</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11Z"/>
+                    </svg>
+                    <div class="card-title">Média Frequência</div>
+                    <div class="card-value">4.02</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LÍVIA CORREA -->
+        <div id="livia" class="tab-content">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Lívia Correa - Performance Geral
+            </h2>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <div class="card-title">Total Campanha</div>
+                    <div class="card-value">22</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 11.75C6.66 11.75 2 12.92 2 15.25V17H16V15.25C16 12.92 11.34 11.75 9 11.75Z"/>
+                    </svg>
+                    <div class="card-title">Vendido</div>
+                    <div class="card-value" style="color: #22c55e;">3</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <div class="card-title">TM de Pedido</div>
+                    <div class="card-value">R$ 416</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11Z"/>
+                    </svg>
+                    <div class="card-title">Média Frequência</div>
+                    <div class="card-value">3.31</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REGIANE PAULA -->
+        <div id="regiane" class="tab-content">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Regiane Paula - Performance Geral
+            </h2>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <div class="card-title">Total Campanha</div>
+                    <div class="card-value">56</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 11.75C6.66 11.75 2 12.92 2 15.25V17H16V15.25C16 12.92 11.34 11.75 9 11.75Z"/>
+                    </svg>
+                    <div class="card-title">Vendido</div>
+                    <div class="card-value" style="color: #22c55e;">11</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"/>
+                    </svg>
+                    <div class="card-title">Perdido</div>
+                    <div class="card-value" style="color: #ef4444;">14</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 6V9L16 5L12 1V4C7.58 4 4 7.58 4 12C4 13.57 4.46 15.03 5.24 16.26L6.7 14.8C6.25 13.97 6 13 6 12C6 8.69 8.69 6 12 6Z"/>
+                    </svg>
+                    <div class="card-title">Em Negociação</div>
+                    <div class="card-value" style="color: #eab308;">35</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <div class="card-title">TM de Pedido</div>
+                    <div class="card-value">R$ 578</div>
+                </div>
+                <div class="card">
+                    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11Z"/>
+                    </svg>
+                    <div class="card-title">Média Frequência</div>
+                    <div class="card-value">9.64</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Zahil Vinhos | Dashboard Campanha Aniversariantes Janeiro/2026</p>
+        <p class="developer-credit">Desenvolvido por Breno França</p>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
